@@ -4,6 +4,7 @@ import { Register } from "@/components/lib/action/Register.action";
 import Link from "next/link";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import ROUTES from "@/ROUTES";
 
 function Page() {
   const [name, setName] = useState("");
@@ -193,7 +194,7 @@ function Page() {
               <p className="text-center text-sm text-slate-500">
                 Already have an account?{" "}
                 <Link
-                  href="/login"
+                  href={ROUTES.LOGIN}
                   className="font-semibold text-indigo-600 hover:underline"
                 >
                   Sign in

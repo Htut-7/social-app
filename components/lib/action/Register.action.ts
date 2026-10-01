@@ -1,7 +1,6 @@
 "use server";
 
 import dbConnect from "../dbConnect";
-import mongoose from "mongoose";
 import { actionError } from "../response";
 import validateBody from "../validateBody";
 import RegisterSchema from "../schema/RegisterSchema";
@@ -15,14 +14,12 @@ export async function Register(params: {
   password: string;
 }) {
   await dbConnect();
-  const session = await mongoose.startSession();
-  session.startTransaction();
 
   try {
     const validatedData = validateBody(params, RegisterSchema);
     const { name, username, email, password } = validatedData.data;
 
-    const passwordHash = bcrypt.hash(password, 10);
+    const passwordHash = await bcrypt.hash(password, 10);
 
     const existingEmail = await User.findOne({ email });
 

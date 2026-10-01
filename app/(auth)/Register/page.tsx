@@ -1,18 +1,46 @@
 "use client";
 
+import { Register } from "@/components/lib/action/Register.action";
 import Link from "next/link";
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 
 function Page() {
   const [name, setName] = useState("");
   const [username, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const router = useRouter();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-  };
 
+    if (loading) return;
+
+    setLoading(true);
+    setError("");
+
+    try {
+      const result = await Register({
+        name,
+        username,
+        email,
+        password,
+      });
+
+      if (!result) {
+        setError("Registration failed");
+        return;
+      }
+      router.push("/login");
+    } catch {
+      setError("Unable to register. Please try again");
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <section className="flex min-h-screen items-center justify-center bg-slate-100 p-4 sm:p-8">
       <div className="grid w-full max-w-5xl overflow-hidden rounded-3xl bg-white shadow-xl lg:grid-cols-2">
@@ -149,11 +177,17 @@ function Page() {
                 />
               </div>
 
+              {error && (
+                <p role="alert" className="text-sm text-red-600">
+                  {error}
+                </p>
+              )}
+
               <button
                 type="submit"
                 className="mt-2 w-full rounded-xl bg-indigo-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-indigo-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
-                Create account
+                {loading ? "Loading..." : "Create Account"}
               </button>
 
               <p className="text-center text-sm text-slate-500">

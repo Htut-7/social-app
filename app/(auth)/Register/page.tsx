@@ -30,8 +30,8 @@ function Page() {
         password,
       });
 
-      if (!result) {
-        setError("Registration failed");
+      if (!result.success) {
+        setError(result.message || "Registration failed");
         return;
       }
       router.push("/login");

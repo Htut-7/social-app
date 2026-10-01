@@ -12,10 +12,13 @@ export async function Register(params: {
   username: string;
   email: string;
   password: string;
-}) {
-  await dbConnect();
-
+}): Promise<{
+  success: boolean;
+  message?: string;
+  details?: object | null;
+}> {
   try {
+    await dbConnect();
     const validatedData = validateBody(params, RegisterSchema);
     const { name, username, email, password } = validatedData.data;
 

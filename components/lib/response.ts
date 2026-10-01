@@ -41,10 +41,11 @@ const actionError = (e: unknown) => {
     message = "Validation Error";
   }
 
-  return NextResponse.json({
+  return {
     message,
     details,
-  });
+    success: false,
+  };
 };
 
 export { actionError, handleErrorResponse, handleSuccessResponse };

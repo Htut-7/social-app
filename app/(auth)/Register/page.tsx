@@ -1,8 +1,18 @@
 "use client";
 
 import Link from "next/link";
+import React, { useState } from "react";
 
 function Page() {
+  const [name, setName] = useState("");
+  const [username, setUserName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+  };
+
   return (
     <section className="flex min-h-screen items-center justify-center bg-slate-100 p-4 sm:p-8">
       <div className="grid w-full max-w-5xl overflow-hidden rounded-3xl bg-white shadow-xl lg:grid-cols-2">
@@ -51,7 +61,7 @@ function Page() {
         </div>
 
         <div className="flex items-center px-8 py-12 sm:px-12 lg:py-16">
-          <form className="w-full">
+          <form className="w-full" onSubmit={handleSubmit}>
             <h1 className="text-3xl font-bold tracking-tight text-slate-900">
               Create your account
             </h1>
@@ -63,12 +73,32 @@ function Page() {
             <div className="mt-8 space-y-5">
               <div className="space-y-2">
                 <label
+                  htmlFor="name"
+                  className="block text-sm font-medium text-slate-700"
+                >
+                  Name
+                </label>
+                <input
+                  type="text"
+                  onChange={(e) => setName(e.target.value)}
+                  value={name}
+                  id="name"
+                  name="name"
+                  autoComplete="name"
+                  placeholder="name"
+                  required
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 transition placeholder:text-slate-400 focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 focus:outline-none"
+                />
+
+                <label
                   htmlFor="username"
                   className="block text-sm font-medium text-slate-700"
                 >
                   Username
                 </label>
                 <input
+                  onChange={(e) => setUserName(e.target.value)}
+                  value={username}
                   id="username"
                   name="username"
                   type="text"
@@ -87,6 +117,8 @@ function Page() {
                   Email
                 </label>
                 <input
+                  onChange={(e) => setEmail(e.target.value)}
+                  value={email}
                   id="email"
                   name="email"
                   type="email"
@@ -105,6 +137,8 @@ function Page() {
                   Password
                 </label>
                 <input
+                  onChange={(e) => setPassword(e.target.value)}
+                  value={password}
                   id="password"
                   name="password"
                   type="password"

@@ -17,7 +17,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
           const existingUser = await User.findOne({
             email,
-          }).select("passwordHash");
+          }).select("+passwordHash");
 
           if (!existingUser?.passwordHash) return null;
 

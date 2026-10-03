@@ -1,12 +1,20 @@
-"use client";
-
+import { auth } from "@/auth";
 import Logout from "@/components/Logout";
 
-export default function Home() {
+async function Home() {
+  const session = await auth();
+  console.log(session?.user?.email);
+
   return (
-    <h1 className="p-8 text-3xl font-bold text-blue-600">
-      Social App
+    <main className="space-y-4 p-8">
+      <h1 className="text-3xl font-bold text-blue-600">Social App</h1>
+
+      <p>{session?.user?.name}</p>
+      <p>{session?.user?.email}</p>
+
       <Logout />
-    </h1>
+    </main>
   );
 }
+
+export default Home;

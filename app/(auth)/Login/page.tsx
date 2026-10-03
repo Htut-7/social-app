@@ -3,17 +3,43 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import ROUTES from "@/ROUTES";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 function Page() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const router = useRouter();
 
-  //   const handleSubmit=async(e: React.FormEvent<HTMLFormElement>)=>{
-  //     e.preventDefault();
-  //     const result=await
-  //   }
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (loading) return;
+
+    setLoading(true);
+    setError("");
+
+    try {
+      const result = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+      });
+
+      if (!result || result.error) {
+        setError("Unable to sign in. Check your email and password");
+        return;
+      }
+      router.push(ROUTES.HOME);
+      router.refresh();
+    } catch {
+      setError("Unable to Login. Please try again");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <section className="flex min-h-screen items-center justify-center bg-slate-100 p-4 sm:p-8">
@@ -58,7 +84,7 @@ function Page() {
         </div>
 
         <div className="flex items-center px-8 py-12 sm:px-12 lg:py-16">
-          <form className="w-full">
+          <form className="w-full" onSubmit={handleSubmit}>
             <h2 className="text-3xl font-bold tracking-tight text-slate-900">
               Sign in to your account
             </h2>
@@ -115,6 +141,12 @@ function Page() {
                 </label>
               </div>
 
+              {error && (
+                <p role="alert" className="text-sm text-red-600">
+                  {error}
+                </p>
+              )}
+
               <button
                 type="submit"
                 className="flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-indigo-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
@@ -147,5 +179,4 @@ function Page() {
     </section>
   );
 }
-
 export default Page;

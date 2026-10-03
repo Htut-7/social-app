@@ -35,7 +35,7 @@ function Page() {
         setError(result.message || "Registration failed");
         return;
       }
-      router.push("/login");
+      router.push(ROUTES.LOGIN);
     } catch {
       setError("Unable to register. Please try again");
     } finally {

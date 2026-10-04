@@ -5,6 +5,7 @@ import Link from "next/link";
 import ROUTES from "@/ROUTES";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import AuthForm from "@/components/AuthForm";
 
 function Page() {
   const [email, setEmail] = useState("");
@@ -163,6 +164,8 @@ function Page() {
                   "Sign in"
                 )}
               </button>
+
+              <AuthForm />
 
               <div className="text-center">
                 <Link

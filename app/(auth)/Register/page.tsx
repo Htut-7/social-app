@@ -5,6 +5,7 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import ROUTES from "@/ROUTES";
+import AuthForm from "@/components/AuthForm";
 
 function Page() {
   const [name, setName] = useState("");
@@ -190,6 +191,8 @@ function Page() {
               >
                 {loading ? "Loading..." : "Create Account"}
               </button>
+
+              <AuthForm />
 
               <p className="text-center text-sm text-slate-500">
                 Already have an account?{" "}

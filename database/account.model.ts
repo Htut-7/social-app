@@ -19,7 +19,7 @@ const accountSchema = new Schema(
     },
     provider: {
       type: String,
-      enum: ["github", "google"],
+      enum: ["google", "facebook"],
       required: true,
     },
     providerAccountId: {

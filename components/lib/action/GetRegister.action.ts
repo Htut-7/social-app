@@ -52,7 +52,9 @@ export async function GetRegisterById(params: { userId: string }): Promise<{
 
     return {
       success: true,
-      data: user,
+      data: {
+        user,
+      },
     };
   } catch (e) {
     return actionError(e);

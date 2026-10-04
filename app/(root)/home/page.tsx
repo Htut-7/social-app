@@ -1,5 +1,7 @@
 import { auth } from "@/auth";
 import Logout from "@/components/Logout";
+import ROUTES from "@/ROUTES";
+import Link from "next/link";
 
 async function Home() {
   const session = await auth();
@@ -11,6 +13,10 @@ async function Home() {
 
       <p>{session?.user?.name}</p>
       <p>{session?.user?.email}</p>
+
+      {session?.user?.id && (
+        <Link href={ROUTES.PROFILE(session?.user?.id)}>Profile</Link>
+      )}
 
       <Logout />
     </main>

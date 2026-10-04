@@ -97,9 +97,21 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       }
     },
 
-    async jwt({ token, user }) {
-      if (user) {
+    async jwt({ token, user, account }) {
+      if (account?.type === "credentials" && user) {
         token.sub = user.id;
+      } else if (account) {
+        await dbConnect();
+
+        const existingAccount = await Account.findOne({
+          provider: account.provider,
+          providerAccountId: account.providerAccountId,
+        });
+
+        if (!existingAccount) {
+          throw new Error("OAuth account not found");
+        }
+        token.sub = existingAccount.user.toString();
       }
       return token;
     },

@@ -3,6 +3,8 @@
 import ROUTES from "@/ROUTES";
 import React, { useState } from "react";
 import Link from "next/link";
+import { UpdateProfile } from "./lib/action/UpdateProfile.action";
+import { useRouter } from "next/navigation";
 
 interface userProfile {
   name: string;
@@ -16,10 +18,49 @@ function EditProfile({ user, userId }: { user: userProfile; userId: string }) {
   const [name, setName] = useState(user.name);
   const [username, setUsername] = useState(user.username);
   const [bio, setBio] = useState(user.bio);
+  const [success, setSuccess] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const router = useRouter();
+
+  const handleEdit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (loading) return;
+
+    setLoading(true);
+    setSuccess("");
+    setError("");
+
+    try {
+      const result = await UpdateProfile({
+        username,
+        name,
+        image,
+        bio,
+      });
+
+      if (!result.success) {
+        throw new Error("Profile Update failed");
+      }
+
+      router.push(ROUTES.PROFILE(userId));
+      router.refresh();
+
+      setSuccess(result.message || "Profile update successfully");
+    } catch {
+      setError("Unable to update your profile");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-slate-100 px-4 py-12 sm:px-8">
-      <form className="mx-auto max-w-2xl overflow-hidden rounded-3xl bg-white shadow-xl">
+      <form
+        className="mx-auto max-w-2xl overflow-hidden rounded-3xl bg-white shadow-xl"
+        onSubmit={handleEdit}
+      >
         <div className="relative overflow-hidden bg-indigo-950 px-6 py-10 text-white sm:px-10">
           <div
             aria-hidden="true"
@@ -53,8 +94,9 @@ function EditProfile({ user, userId }: { user: userProfile; userId: string }) {
               id="image"
               type="url"
               placeholder="Enter your profile image"
-              value={image}
+              accept="image/jpeg,image/png,webp"
               onChange={(e) => setImage(e.target.value)}
+              value={image}
               className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 transition placeholder:text-slate-400 focus:border-indigo-500 focus:bg-white focus:outline-none focus:ring-4 focus:ring-indigo-500/10"
             />
             <p className="text-xs text-slate-500">
@@ -115,12 +157,21 @@ function EditProfile({ user, userId }: { user: userProfile; userId: string }) {
             />
           </div>
 
+          {error && <p className="text-sm text-red-600">{error}</p>}
+
+          {success && (
+            <p role="status" className="text-sm text-green-600">
+              {success}
+            </p>
+          )}
+
           <div className="flex flex-col gap-3 border-t border-slate-100 pt-6 sm:flex-row sm:items-center">
             <button
               type="submit"
+              disabled={loading}
               className="rounded-xl bg-indigo-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-indigo-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
-              Update Profile
+              {loading ? "Loading..." : "Update Profile"}
             </button>
 
             <Link

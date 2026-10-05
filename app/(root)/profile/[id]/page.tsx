@@ -93,7 +93,7 @@ async function page({ params }: { params: Promise<{ id: string }> }) {
 
             <div>
               <Link
-                href={"/"}
+                href={ROUTES.HOME}
                 className="block rounded-xl border border-slate-200 px-6 py-3 text-center text-sm font-semibold text-slate-600 transition hover:bg-slate-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
                 Back to Home

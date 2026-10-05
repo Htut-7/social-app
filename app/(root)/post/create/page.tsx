@@ -1,12 +1,40 @@
 "use client";
 
+import { CreatePost } from "@/components/lib/action/CreatePost.action";
+import ROUTES from "@/ROUTES";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
 function Page() {
   const [content, setContent] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const router = useRouter();
 
   const postHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (loading) return;
+
+    setLoading(true);
+    setError("");
+
+    try {
+      const result = await CreatePost({
+        content,
+      });
+
+      if (!result.success) {
+        throw new Error("Post creation failed");
+      }
+
+      router.push(ROUTES.HOME);
+      router.refresh();
+    } catch {
+      setError("Unavailable to create post");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -60,12 +88,15 @@ function Page() {
             </p>
           </div>
 
+          {error && <p className="text-sm text-red-600">{error}</p>}
+
           <div className="flex justify-end border-t border-slate-100 pt-6">
             <button
+              disabled={loading}
               type="submit"
               className="w-full rounded-xl bg-indigo-600 px-8 py-3 text-sm font-semibold text-white transition hover:bg-indigo-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 sm:w-auto"
             >
-              Post
+              {loading ? "Loading..." : "Post"}
             </button>
           </div>
         </div>

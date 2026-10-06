@@ -155,11 +155,7 @@ async function Home() {
             </p>
           ) : postResult.data?.post.length ? (
             postResult.data.post.map((post) => (
-              <PostCard
-                key={post._id}
-                post={post}
-                currentUser={session.user?.id}
-              />
+              <PostCard key={post._id} post={post} />
             ))
           ) : (
             <div className="rounded-2xl border border-dashed border-slate-300 bg-white/60 px-6 py-12 text-center">

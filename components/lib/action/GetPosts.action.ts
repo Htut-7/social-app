@@ -6,6 +6,8 @@ import GetPostSchema from "../schema/GetPostSchema";
 import validateBody from "../validateBody";
 import User from "@/database/user.model";
 import { actionError } from "../response";
+import GetPostByIdSchema from "../schema/GetPostByIdSchema";
+import { auth } from "@/auth";
 
 export async function GetPost(params: {
   page: number;
@@ -45,6 +47,52 @@ export async function GetPost(params: {
       data: {
         post: JSON.parse(JSON.stringify(posts)),
         isNext,
+      },
+    };
+  } catch (e) {
+    return actionError(e);
+  }
+}
+
+export async function GetPostById(params: { postId: string }): Promise<{
+  success: boolean;
+  data?: {
+    post: {
+      _id: string;
+      content: string;
+    };
+  };
+  message?: string;
+  details?: object | null;
+}> {
+  await dbConnect();
+
+  const session = await auth();
+  if (!session?.user?.id) {
+    throw new Error("Unauthorized");
+  }
+
+  const validatedData = validateBody(params, GetPostByIdSchema);
+  const { postId } = validatedData.data;
+
+  try {
+    const post = await Post.findById(postId);
+
+    if (!post) {
+      throw new Error("Post not found");
+    }
+
+    if (post.author.toString() !== session.user.id) {
+      throw new Error("Cannot edit this post");
+    }
+
+    return {
+      success: true,
+      data: {
+        post: {
+          _id: post._id.toString(),
+          content: post.content || "",
+        },
       },
     };
   } catch (e) {

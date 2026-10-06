@@ -1,11 +1,12 @@
 "use server";
 
-import Post, { IPost } from "@/database/post.model";
+import Post from "@/database/post.model";
 import dbConnect from "../dbConnect";
 import GetPostSchema from "../schema/GetPostSchema";
 import validateBody from "../validateBody";
 import User from "@/database/user.model";
 import { actionError } from "../response";
+import { FeedPost } from "@/components/PostCard";
 
 export async function GetPost(params: {
   page: number;
@@ -13,7 +14,7 @@ export async function GetPost(params: {
 }): Promise<{
   success: boolean;
   data?: {
-    post: IPost[];
+    post: FeedPost[];
     isNext: boolean;
   };
   message?: string;
@@ -23,7 +24,7 @@ export async function GetPost(params: {
   const validatedData = validateBody(params, GetPostSchema);
   const { page = 1, pageSize = 10 } = validatedData.data;
 
-  const skip = (Number(page) - 1) * 10;
+  const skip = (page - 1) * pageSize;
   const limit = Number(pageSize);
 
   try {
@@ -34,7 +35,8 @@ export async function GetPost(params: {
         model: User,
         select: "_id name image username",
       })
-      .select("_id content author likeCount content")
+      .select("_id content author likeCount content createdAt")
+      .sort({ createdAt: -1, _id: 1 })
       .lean()
       .skip(skip)
       .limit(limit);

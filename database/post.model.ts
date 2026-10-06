@@ -1,6 +1,6 @@
 import { Schema, Types, Document, models, model } from "mongoose";
 
-interface IPost {
+export interface IPost {
   author: Types.ObjectId;
   content: string;
   media: Types.ObjectId[];

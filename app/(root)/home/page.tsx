@@ -5,6 +5,8 @@ import ROUTES from "@/ROUTES";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
+import PostCard from "@/components/PostCard";
+import { GetPost } from "@/components/lib/action/GetPosts.action";
 
 async function Home() {
   const session = await auth();
@@ -22,6 +24,11 @@ async function Home() {
   }
 
   const user = result.data?.user;
+
+  const postResult = await GetPost({
+    page: 1,
+    pageSize: 10,
+  });
 
   return (
     <main className="min-h-screen bg-slate-100">
@@ -142,23 +149,32 @@ async function Home() {
             <div className="h-px flex-1 bg-slate-200" />
           </div>
 
-          {/* Render your post list here when fetching posts is connected. */}
-          <div className="rounded-2xl border border-dashed border-slate-300 bg-white/60 px-6 py-12 text-center">
-            <h3 className="text-lg font-semibold text-slate-700">
-              A place for your stories
-            </h3>
-
-            <p className="mx-auto mt-2 max-w-sm text-sm leading-relaxed text-slate-500">
-              Share a thought, ask a question, or tell people about your day.
+          {!postResult.success ? (
+            <p role="alert" className="text-sm text-red-600">
+              {postResult.message || "Unable to load posts"}
             </p>
+          ) : postResult.data?.post.length ? (
+            postResult.data.post.map((post) => (
+              <PostCard key={post._id} post={post} />
+            ))
+          ) : (
+            <div className="rounded-2xl border border-dashed border-slate-300 bg-white/60 px-6 py-12 text-center">
+              <h3 className="text-lg font-semibold text-slate-700">
+                No posts yet
+              </h3>
 
-            <Link
-              href={ROUTES.CREATE}
-              className="mt-6 inline-flex rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-indigo-700"
-            >
-              Create a post
-            </Link>
-          </div>
+              <p className="mt-2 text-sm text-slate-500">
+                Share the first story with your people.
+              </p>
+
+              <Link
+                href={ROUTES.CREATE}
+                className="mt-6 inline-flex rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white hover:bg-indigo-700"
+              >
+                Create a post
+              </Link>
+            </div>
+          )}
         </section>
       </div>
     </main>

@@ -35,7 +35,7 @@ export async function GetPost(params: {
         model: User,
         select: "_id name image username",
       })
-      .select("_id content author likeCount content createdAt")
+      .select("_id content author likeCount content createdAt updatedAt")
       .sort({ createdAt: -1, _id: 1 })
       .lean()
       .skip(skip)

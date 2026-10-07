@@ -1,6 +1,11 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import ROUTES from "@/ROUTES";
+import { DeletePost } from "./lib/action/DeletePost.action";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export interface FeedPost {
   _id: string;
@@ -25,6 +30,33 @@ function PostCard({
 }) {
   const author = post.author;
   const isOwnPost = author?._id === currentUser;
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const router = useRouter();
+
+  const deleteHandler = async () => {
+    if (loading) return;
+
+    setLoading(true);
+    setError("");
+
+    try {
+      const result = await DeletePost({
+        postId: post._id,
+      });
+
+      if (!result.success) {
+        throw new Error(result.message || "Unable to delete this post");
+      }
+
+      router.refresh();
+    } catch {
+      setError("Unable to delete this post");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <article className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
@@ -106,6 +138,8 @@ function PostCard({
         {post.content}
       </p>
 
+      {error && <p className="text-sm text-red-500">{error}</p>}
+
       {isOwnPost && (
         <div className="mt-5 flex justify-end gap-2 border-t border-slate-100 pt-4">
           <Link
@@ -131,6 +165,7 @@ function PostCard({
           </Link>
 
           <button
+            onClick={deleteHandler}
             type="button"
             aria-label="Delete post"
             title="Delete post"

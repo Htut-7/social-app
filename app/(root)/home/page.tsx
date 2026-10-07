@@ -15,6 +15,8 @@ async function Home() {
     redirect(ROUTES.LOGIN);
   }
 
+  const currentUser = session.user.id;
+
   const result = await GetRegisterById({
     userId: session?.user?.id,
   });
@@ -155,11 +157,7 @@ async function Home() {
             </p>
           ) : postResult.data?.post.length ? (
             postResult.data.post.map((post) => (
-              <PostCard
-                key={post._id}
-                post={post}
-                currentUser={session.user?.id}
-              />
+              <PostCard key={post._id} post={post} currentUser={currentUser} />
             ))
           ) : (
             <div className="rounded-2xl border border-dashed border-slate-300 bg-white/60 px-6 py-12 text-center">

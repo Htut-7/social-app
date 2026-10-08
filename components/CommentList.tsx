@@ -1,7 +1,9 @@
 import Image from "next/image";
 import { GetComment } from "./lib/action/GetComment.action";
+import CommentLikeButton from "./CommentLikeButton";
 
 type CommentWithAuthor = {
+  isLiked: boolean;
   _id: string;
   content: string;
   likeCount: number;
@@ -65,14 +67,22 @@ async function CommentList({ postId }: { postId: string }) {
                 </p>
               </div>
 
-              <p className="mt-1 px-2 text-xs text-slate-400">
-                {new Date(comment.createdAt).toLocaleDateString("en-US", {
-                  month: "short",
-                  day: "numeric",
-                  year: "numeric",
-                  timeZone: "UTC",
-                })}
-              </p>
+              <div className="mt-1 flex items-center gap-4 px-2">
+                <p className="text-xs text-slate-400">
+                  {new Date(comment.createdAt).toLocaleDateString("en-US", {
+                    month: "short",
+                    day: "numeric",
+                    year: "numeric",
+                    timeZone: "UTC",
+                  })}
+                </p>
+
+                <CommentLikeButton
+                  commentId={comment._id}
+                  initialIsLiked={comment.isLiked}
+                  initialLikeCount={comment.likeCount}
+                />
+              </div>
             </div>
           </div>
         );

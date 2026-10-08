@@ -31,7 +31,7 @@ export async function GetPostById(params: { postId: string }): Promise<{
       success: true,
       data: {
         post: {
-          _id: posts.id,
+          _id: posts._id.toString(),
           content: posts.content || "",
         },
       },

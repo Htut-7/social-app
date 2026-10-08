@@ -21,7 +21,7 @@ export async function GetComment(params: { postId: string }): Promise<{
     const validatedData = validateBody(params, GetCommentSchema);
     const { postId } = validatedData.data;
 
-    const comments = await Comment.find({ postId })
+    const comments = await Comment.find({ post: postId })
       .populate({
         path: "author",
         model: User,

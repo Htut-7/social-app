@@ -1,12 +1,12 @@
 import { auth } from "@/auth";
 import { GetRegisterById } from "@/components/lib/action/GetRegister.action";
-import Logout from "@/components/Logout";
 import ROUTES from "@/ROUTES";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import PostCard from "@/components/PostCard";
 import { GetPost } from "@/components/lib/action/GetPosts.action";
+import Navbar from "@/components/Navbar";
 
 async function Home() {
   const session = await auth();
@@ -34,30 +34,7 @@ async function Home() {
 
   return (
     <main className="min-h-screen bg-slate-100">
-      <header className="border-b border-slate-200 bg-white">
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4 sm:px-8">
-          <h1 className="text-xl font-bold tracking-tight text-indigo-950 sm:text-2xl">
-            Social App<span className="text-indigo-500">.</span>
-          </h1>
-
-          <div className="flex items-center gap-3 sm:gap-5">
-            <Link
-              href={ROUTES.CREATE}
-              className="flex items-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-700"
-            >
-              <span aria-hidden="true" className="text-xl leading-none">
-                +
-              </span>
-              <span className="hidden sm:inline">Create post</span>
-              <span className="sr-only sm:hidden">Create post</span>
-            </Link>
-
-            <div className="text-sm font-medium text-slate-600">
-              <Logout />
-            </div>
-          </div>
-        </div>
-      </header>
+      <Navbar />
 
       <div className="mx-auto grid max-w-6xl gap-6 px-4 py-8 sm:px-8 lg:grid-cols-[280px_1fr]">
         <aside>

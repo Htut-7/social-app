@@ -1,6 +1,6 @@
 import { Schema, Types, Document, model, models } from "mongoose";
 
-interface IComment {
+export interface IComment {
   author: Types.ObjectId;
   post: Types.ObjectId;
   content: string;

@@ -37,7 +37,7 @@ export async function CreateComment(params: {
 
     await Comment.create({
       author: userId,
-      postId,
+      post: postId,
       content,
     });
 

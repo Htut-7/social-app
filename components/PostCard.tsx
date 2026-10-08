@@ -7,6 +7,7 @@ import { DeletePost } from "./lib/action/DeletePost.action";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import LikeButton from "./LikeButton";
+import CommentForm from "./CommentForm";
 
 export interface FeedPost {
   _id: string;
@@ -146,6 +147,8 @@ function PostCard({
           initialIsLiked={post.isLiked}
           initialLikeCount={post.likeCount}
         />
+
+        <CommentForm postId={post._id} />
       </div>
 
       {error && <p className="text-sm text-red-500">{error}</p>}

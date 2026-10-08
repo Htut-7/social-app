@@ -37,6 +37,8 @@ function CommentLikeButton({
     } catch {
       setError("Unable to react this comment");
       setError(error);
+    } finally {
+      setLoading(false);
     }
   };
 

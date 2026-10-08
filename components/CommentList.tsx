@@ -22,7 +22,7 @@ async function CommentList({ postId }: { postId: string }) {
   });
 
   if (!result.success || !result.data) {
-    throw new Error(result.message || "Unable to load comments");
+    throw new Error(result.message);
   }
 
   const comments = result.data.comment as unknown as CommentWithAuthor[];

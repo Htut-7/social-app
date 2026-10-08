@@ -53,7 +53,7 @@ export async function ToogleLike(params: { postId: string }): Promise<{
     let likeCount = post.likeCount || 0;
     let isLiked = false;
 
-    if (existingVote) {
+    if (existingVote && existingVote.voteType === "like") {
       await Vote.findByIdAndDelete(existingVote._id).session(session);
       likeCount = Math.max(0, likeCount - 1);
       isLiked = false;
@@ -74,7 +74,7 @@ export async function ToogleLike(params: { postId: string }): Promise<{
     }
 
     post.likeCount = likeCount;
-    await post.save({ session, timeStamp: false });
+    await post.save({ session });
     await session.commitTransaction();
 
     return {

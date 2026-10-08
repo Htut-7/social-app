@@ -7,6 +7,8 @@ import validateBody from "../validateBody";
 import User from "@/database/user.model";
 import { actionError } from "../response";
 import { FeedPost } from "@/components/PostCard";
+import { auth } from "@/auth";
+import Vote from "@/database/vote.model";
 
 export async function GetPost(params: {
   page: number;
@@ -21,6 +23,7 @@ export async function GetPost(params: {
   details?: object | null;
 }> {
   await dbConnect();
+  const session = await auth();
   const validatedData = validateBody(params, GetPostSchema);
   const { page = 1, pageSize = 10 } = validatedData.data;
 
@@ -35,17 +38,38 @@ export async function GetPost(params: {
         model: User,
         select: "_id name image username",
       })
-      .select("_id content author likeCount content createdAt updatedAt")
+      .select("_id content author likeCount  createdAt updatedAt")
       .sort({ createdAt: -1, _id: 1 })
       .lean()
       .skip(skip)
       .limit(limit);
 
+    const postWithLikes = posts.map((post) => ({
+      ...post,
+      isLiked: false,
+    }));
+
+    if (session?.user?.id) {
+      const postIds = posts.map((post) => post._id);
+      const votes = await Vote.find({
+        author: session.user.id,
+        typeId: { $in: postIds },
+        voteType: "like",
+        type: "post",
+      }).lean();
+
+      for (const post of postWithLikes) {
+        post.isLiked = votes.some(
+          (vote) => vote.typeId.toString() === post._id.toString()
+        );
+      }
+    }
+
     const isNext = totalPosts > skip + posts.length;
     return {
       success: true,
       data: {
-        post: JSON.parse(JSON.stringify(posts)),
+        post: JSON.parse(JSON.stringify(postWithLikes)),
         isNext,
       },
     };

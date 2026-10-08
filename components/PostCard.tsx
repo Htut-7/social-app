@@ -6,6 +6,7 @@ import ROUTES from "@/ROUTES";
 import { DeletePost } from "./lib/action/DeletePost.action";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import LikeButton from "./LikeButton";
 
 export interface FeedPost {
   _id: string;
@@ -13,6 +14,7 @@ export interface FeedPost {
   likeCount: number;
   createdAt: string;
   updatedAt: string;
+  isLiked: boolean;
   author: {
     _id: string;
     name: string;
@@ -137,6 +139,14 @@ function PostCard({
       <p className="mt-5 whitespace-pre-wrap wrap-break-word text-sm leading-relaxed text-slate-700">
         {post.content}
       </p>
+
+      <div className="mt-5 border-t border-slate-100 pt-3">
+        <LikeButton
+          postId={post._id}
+          initialIsLiked={post.isLiked}
+          initialLikeCount={post.likeCount}
+        />
+      </div>
 
       {error && <p className="text-sm text-red-500">{error}</p>}
 

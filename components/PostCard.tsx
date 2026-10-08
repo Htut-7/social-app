@@ -137,9 +137,12 @@ function PostCard({
         </div>
       </div>
 
-      <p className="mt-5 whitespace-pre-wrap wrap-break-word text-sm leading-relaxed text-slate-700">
+      <Link
+        href={ROUTES.POST(post._id)}
+        className="mt-5 whitespace-pre-wrap wrap-break-word text-sm leading-relaxed text-slate-700"
+      >
         {post.content}
-      </p>
+      </Link>
 
       <div className="mt-5 border-t border-slate-100 pt-3">
         <LikeButton

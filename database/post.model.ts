@@ -5,6 +5,7 @@ export interface IPost {
   content: string;
   media: Types.ObjectId[];
   likeCount: number;
+  commentCount: number;
   createdAt: Date;
   upDatedAt: Date;
 }
@@ -31,6 +32,11 @@ const postSchema = new Schema(
     ],
 
     likeCount: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
+    commentCount: {
       type: Number,
       default: 0,
       min: 0,

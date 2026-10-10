@@ -9,6 +9,7 @@ import { actionError } from "../response";
 import { FeedPost } from "@/components/PostCard";
 import { auth } from "@/auth";
 import Vote from "@/database/vote.model";
+import Comment from "@/database/comment.model";
 
 export async function GetPost(params: {
   page: number;
@@ -38,7 +39,7 @@ export async function GetPost(params: {
         model: User,
         select: "_id name image username",
       })
-      .select("_id content author likeCount  createdAt updatedAt")
+      .select("_id content author likeCount commentCount createdAt updatedAt")
       .sort({ createdAt: -1, _id: 1 })
       .lean()
       .skip(skip)
@@ -47,7 +48,12 @@ export async function GetPost(params: {
     const postWithLikes = posts.map((post) => ({
       ...post,
       isLiked: false,
+      commentCount: 0,
     }));
+
+    for (const post of postWithLikes) {
+      post.commentCount = await Comment.countDocuments({ post: post._id });
+    }
 
     if (session?.user?.id) {
       const postIds = posts.map((post) => post._id);

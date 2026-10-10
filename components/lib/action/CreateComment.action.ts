@@ -38,14 +38,16 @@ export async function CreateComment(params: {
       throw new Error("Post not found");
     }
 
-    await Comment.create([
-      {
-        author: userId,
-        post: postId,
-        content,
-      },
-      { session },
-    ]);
+    await Comment.create(
+      [
+        {
+          author: userId,
+          post: postId,
+          content,
+        },
+      ],
+      { session }
+    );
 
     post.commentCount = (post.commentCount || 0) + 1;
     await post.save({ session });
@@ -56,7 +58,9 @@ export async function CreateComment(params: {
       message: "Comment created successfully",
     };
   } catch (e) {
-    await session.abortTransaction();
+    if (session.inTransaction()) {
+      await session.abortTransaction();
+    }
     return actionError(e);
   } finally {
     await session.endSession();

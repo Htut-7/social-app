@@ -13,6 +13,7 @@ export interface FeedPost {
   _id: string;
   content: string;
   likeCount: number;
+  commentCount: number;
   createdAt: string;
   updatedAt: string;
   isLiked: boolean;
@@ -145,12 +146,20 @@ function PostCard({
       </Link>
 
       <div className="mt-5 border-t border-slate-100 pt-3">
-        <LikeButton
-          postId={post._id}
-          initialIsLiked={post.isLiked}
-          initialLikeCount={post.likeCount}
-        />
+        <div className="flex items-center justify-around">
+          <LikeButton
+            postId={post._id}
+            initialIsLiked={post.isLiked}
+            initialLikeCount={post.likeCount}
+          />
 
+          <Link
+            href={ROUTES.POST(post._id)}
+            className="text-sm text-slate-500 transition hover:"
+          >
+            {post.commentCount ?? 0} comments
+          </Link>
+        </div>
         <CommentForm postId={post._id} />
       </div>
 

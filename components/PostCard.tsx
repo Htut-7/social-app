@@ -155,9 +155,24 @@ function PostCard({
 
           <Link
             href={ROUTES.POST(post._id)}
-            className="text-sm text-slate-500 transition hover:"
+            aria-label={`View ${post.commentCount ?? 0} comments`}
+            className="flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-slate-500 transition hover:bg-indigo-50 hover:text-indigo-600"
           >
-            {post.commentCount ?? 0} comments
+            <svg
+              aria-hidden="true"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5Z" />
+            </svg>
+
+            <span>{post.commentCount ?? 0} Comments</span>
           </Link>
         </div>
         <CommentForm postId={post._id} />

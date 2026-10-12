@@ -26,6 +26,13 @@ function Navbar() {
             <span className="sr-only sm:hidden">Create post</span>
           </Link>
 
+          <Link
+            href="/saved"
+            className="rounded-xl px-3 py-2.5 text-sm font-semibold text-slate-600 transition hover:bg-indigo-50 hover:text-indigo-600"
+          >
+            Saved Posts
+          </Link>
+
           <div className="text-sm font-medium text-slate-600">
             <Logout />
           </div>

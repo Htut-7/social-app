@@ -8,6 +8,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import LikeButton from "./LikeButton";
 import CommentForm from "./CommentForm";
+import Bookmark from "./Bookmark";
 
 export interface FeedPost {
   _id: string;
@@ -17,6 +18,7 @@ export interface FeedPost {
   createdAt: string;
   updatedAt: string;
   isLiked: boolean;
+  isSaved: boolean;
   author: {
     _id: string;
     name: string;
@@ -174,6 +176,8 @@ function PostCard({
 
             <span>{post.commentCount ?? 0} Comments</span>
           </Link>
+
+          <Bookmark postId={post._id} isSaved={post.isSaved ?? false} />
         </div>
         <CommentForm postId={post._id} />
       </div>

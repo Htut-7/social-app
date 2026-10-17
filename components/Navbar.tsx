@@ -1,6 +1,7 @@
 import Link from "next/link";
 import ROUTES from "@/ROUTES";
 import Logout from "./Logout";
+import UserSearch from "./UserSearch";
 
 function Navbar() {
   return (
@@ -12,6 +13,10 @@ function Navbar() {
         >
           Social App<span className="text-indigo-500">.</span>
         </Link>
+
+        <div className="hidden flex-1 justify-center px-6 md:flex">
+          <UserSearch />
+        </div>
 
         <div className="flex items-center gap-3 sm:gap-5">
           <Link

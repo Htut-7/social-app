@@ -1,6 +1,6 @@
 "use client";
 
-import { IUser } from "@/database/user.model";
+import { IUserSearchResult } from "@/database/user.model";
 import React, { useEffect, useState } from "react";
 import { UserSearch as searchUser } from "./lib/action/UserSearch.action";
 import Link from "next/link";
@@ -9,7 +9,7 @@ import ROUTES from "@/ROUTES";
 function UserSearch() {
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
-  const [users, setUsers] = useState<IUser[]>([]);
+  const [users, setUsers] = useState<IUserSearchResult[]>([]);
 
   useEffect(() => {
     async function getUsers() {

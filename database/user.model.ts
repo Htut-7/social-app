@@ -11,6 +11,15 @@ export interface IUser {
   updatedAt: Date;
 }
 
+export interface IUserSearchResult extends Pick<
+  IUser,
+  "name" | "username" | "email" | "image" | "bio"
+> {
+  _id: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface IUserDoc extends IUser, Document {}
 
 const userSchema = new Schema(

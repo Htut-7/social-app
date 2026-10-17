@@ -66,7 +66,7 @@ export async function GetPost(params: {
 
       for (const post of postWithLikes) {
         post.isLiked = votes.some(
-          (vote) => vote.typeId.toString() === post._id.toString()
+          (vote) => vote.typeId.toString() === String(post._id)
         );
       }
     }

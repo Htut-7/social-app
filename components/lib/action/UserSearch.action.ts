@@ -1,12 +1,11 @@
 "use server";
 
-import User, { IUser } from "@/database/user.model";
+import User, { IUserSearchResult } from "@/database/user.model";
 import dbConnect from "../dbConnect";
 import { auth } from "@/auth";
 import { actionError } from "../response";
 import validateBody from "../validateBody";
 import UserSearchSchema from "../schema/UserSearchSchema";
-import { QueryFilter } from "mongoose";
 
 export async function UserSearch(params: {
   pageSize: number;
@@ -15,7 +14,7 @@ export async function UserSearch(params: {
 }): Promise<{
   success: boolean;
   data?: {
-    user: IUser[];
+    user: IUserSearchResult[];
     isNext: boolean;
   };
   message?: string;
@@ -32,21 +31,20 @@ export async function UserSearch(params: {
   const validatedData = validateBody(params, UserSearchSchema);
   const { page = 1, pageSize = 10, search } = validatedData.data;
 
-  const skip = (Number(page) - 1) * 10;
   const limit = Number(pageSize);
+  const skip = (Number(page) - 1) * limit;
 
-  const filterQuery: QueryFilter<typeof User> = {};
-
-  if (search) {
-    filterQuery.$or = [
-      { name: { $regex: new RegExp(search, "i") } },
-      { email: { $regex: new RegExp(search, "i") } },
-      { username: { $regex: new RegExp(search, "i") } },
-    ];
-  }
+  const filterQuery = search
+    ? {
+        $or: [
+          { name: { $regex: search, $options: "i" } },
+          { email: { $regex: search, $options: "i" } },
+          { username: { $regex: search, $options: "i" } },
+        ],
+      }
+    : {};
 
   try {
-    const totalUser = await User.countDocuments(filterQuery);
     const users = await User.find(filterQuery)
       .select("_id name username email image bio createdAt updatedAt")
       .sort({ createdAt: -1 })
@@ -54,12 +52,13 @@ export async function UserSearch(params: {
       .limit(limit + 1)
       .lean();
 
-    const isNext = totalUser > skip + users.length;
+    const isNext = users.length > limit;
+    const paginatedUsers = users.slice(0, limit);
 
     return {
       success: true,
       data: {
-        user: JSON.parse(JSON.stringify(users)),
+        user: JSON.parse(JSON.stringify(paginatedUsers)),
         isNext,
       },
     };

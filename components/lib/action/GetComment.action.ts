@@ -50,7 +50,7 @@ export async function GetComment(params: { postId: string }): Promise<{
 
       for (const comment of commentWithLike) {
         comment.isLiked = votes.some(
-          (vote) => vote.typeId?.toString() === comment._id.toString()
+          (vote) => vote.typeId?.toString() === String(comment._id)
         );
       }
     }

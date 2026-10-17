@@ -8,6 +8,7 @@ const ROUTES = {
   EDIT_POST: (postId: string) => `/post/edit/${postId}`,
   POST: (postId: string) => `/post/${postId}`,
   SAVED: "/saved/",
+  PRIVACY: "/privacy",
 };
 
 export default ROUTES;

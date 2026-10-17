@@ -38,6 +38,13 @@ function Navbar() {
             Saved Posts
           </Link>
 
+          <Link
+            href={ROUTES.PRIVACY}
+            className="rounded-xl px-3 py-2.5 text-sm font-semibold text-slate-600 transition hover:bg-indigo-50 hover:text-indigo-600"
+          >
+            Privacy
+          </Link>
+
           <div className="text-sm font-medium text-slate-600">
             <Logout />
           </div>

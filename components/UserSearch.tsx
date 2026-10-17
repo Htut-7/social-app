@@ -3,6 +3,8 @@
 import { IUser } from "@/database/user.model";
 import React, { useEffect, useState } from "react";
 import { UserSearch as searchUser } from "./lib/action/UserSearch.action";
+import Link from "next/link";
+import ROUTES from "@/ROUTES";
 
 function UserSearch() {
   const [loading, setLoading] = useState(false);
@@ -55,8 +57,9 @@ function UserSearch() {
             </p>
           ) : (
             users.map((user) => (
-              <div
+              <Link
                 key={user.username}
+                href={ROUTES.PROFILE(user._id.toString())}
                 className="flex items-center gap-3 rounded-lg border-b border-slate-100 px-3 py-3 transition last:border-b-0 hover:bg-indigo-50"
               >
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-indigo-100 text-sm font-bold text-indigo-700">
@@ -72,7 +75,7 @@ function UserSearch() {
                     @{user.username}
                   </p>
                 </div>
-              </div>
+              </Link>
             ))
           )}
         </div>
